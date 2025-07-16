@@ -178,7 +178,7 @@ function App() {
         />
       )}
       {/*Só vai aparecer a GameOver se gameStage for 'start'*/}
-      {gameStage === 'end' && <GameOver retry={retry}/>}
+      {gameStage === 'end' && <GameOver retry={retry} score={score}/>}
 
     </div>
   )
