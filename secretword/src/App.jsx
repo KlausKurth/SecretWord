@@ -21,8 +21,90 @@ const stages = [
 function App() {
   //Controla o estágio do game com useState  
   const [gameStage, setGameStage] = useState(stages[0].name);
+
   //Controla estado de wordlist
   const [words] = useState(wordsList);
+
+  // tratar as palvras escolhidas
+  const [pickedWord, setPickedWord] = useState("");
+  const [pickedCategory, setPickedCategory] = useState("");
+  const [letters, setLetters] = useState([]);
+
+  //controla as letras adivinhadas
+  const [guessedLetters, setGuessedLatters] = useState([])
+  //controla as letras erradas
+  const [wrongLetters, setWrongLetters] = useState([])
+  //controla a quantidades de tentativas que o jogador vai ter
+  const [guesses, setGuesses] = useState(3)
+  //contrla a pontuação do jogador
+  const [score, setScore] = useState(0)
+
+
+  // Pegar uma categoria e palavra aleatória
+  const pickWordAndCategory = () => {
+    
+    // pega o array de categorias do arquivo words.js
+    const categories = Object.keys(words)
+    // Math.random() gera um número aleatório entre 0 e 1
+    // Multiplicamos esse número pelo tamanho do array de categorias com .length
+    // Math.floor(...) arredonda o valor para baixo, transformando em um índice válido para acessar o array.
+    // Exemplo : 
+    // Math.random() * 6 // Suponha que dá 4.87
+    // Math.floor(4.87)  // Vira 4
+    // categories[4]     // Acessa a quinta categoria
+    const category = categories[Math.floor(Math.random() * Object.keys(categories).length)]
+
+    //Debugger
+    //console.log(category)
+    
+    //pegar uma palavra aleatória
+    const word = words[category][Math.floor(Math.random() * Object.keys(categories).length)]
+
+    //Debugger
+    //console.log(word)
+
+    // Retornando o valor como objeto
+    return {word, category}
+  }
+
+  // Função que inicia o jogo
+  // stage 1 segundo estágio game
+  const startGame = () => {
+    // desestrutura como objeto o valor word category que recebe da função pickWordCategory()
+    const {word, category} = pickWordAndCategory();
+
+    // tranformar a palavra em letras
+    let wordLetters = word.split("")
+
+    //padronizar as letras em caixa baixa
+    wordLetters = wordLetters.map((l) => l.toLowerCase());    
+
+    // Alterar os estatdos das variaveis 
+    setPickedWord(word)
+    setPickedCategory(category)
+    setLetters(wordLetters)
+
+    //Debugger
+    //console.log(category)
+    //console.log(word)
+    //console.log(wordLetters)
+    
+    setGameStage(stages[1].name)
+
+
+  }
+
+  // processar a entrada da letra
+  // stage 2 ultimo estágio game
+  const verifyLetter = (letter) => {
+    console.log(letter)
+    //setGameStage(stages[2].name)
+  }
+
+  // reinicia o jogo  
+  const retry = () => {
+    setGameStage(stages[0].name)
+  }
 
   //Debugger
   console.log(words);
@@ -31,11 +113,23 @@ function App() {
   return (
     <div className="App">
       {/*Só vai aparecer a StartScreen se gameStage for 'start'*/}
-      {gameStage === 'start' && <StartScreen />}
+      {gameStage === 'start' && <StartScreen startGame={startGame}/>}
       {/*Só vai aparecer a Game se gameStage for 'start'*/}
-      {gameStage === 'game' && <Game />}
+      {/*O componente recebe os valores das funções para iniciar o jogo */}
+      {gameStage === 'game' && (
+        <Game 
+          verifyLetter={verifyLetter} 
+          pickedWord={pickedWord} 
+          pickedCategory={pickedCategory} 
+          letters={letters}
+          guessedLetters={guessedLetters}
+          wrongLetters={wrongLetters}
+          guesses={guesses}
+          score={score}
+        />
+      )}
       {/*Só vai aparecer a GameOver se gameStage for 'start'*/}
-      {gameStage === 'end' && <GameOver />}
+      {gameStage === 'end' && <GameOver retry={retry}/>}
 
     </div>
   )

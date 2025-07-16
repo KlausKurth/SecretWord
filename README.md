@@ -25,7 +25,7 @@ Este projeto foi desenvolvido com **React + JavaScript** como parte do meu apren
 
 ## 📸 Capturas de Tela
 
-Adicione aqui os prints da tela do jogo em execução para mostrar o visual da aplicação:
+Em breve prints da tela do jogo em execução:
 
 ```md
 ![Tela inicial](./screenshots/tela-inicial.png)
