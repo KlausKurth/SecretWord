@@ -96,18 +96,44 @@ function App() {
 
   // processar a entrada da letra
   // stage 2 ultimo estágio game
-  const verifyLetter = (letter) => {
-    console.log(letter)
+  const verifyLetter = (letter) => {   
     //setGameStage(stages[2].name)
+
+    //padroninzar a letra que o jogador inputa para caixa baixa
+    const normalizedLetter = letter.toLowerCase()
+    // validar se a letra ja foi utilizada
+    // para o jogador nao correr o risco de perder chance atoa colocar a mesma palavra que ja usou
+    if(
+      guessedLetters.includes(normalizedLetter) || 
+      wrongLetters.includes(normalizedLetter)
+      ){
+        return
+      }
+      
+      // valide a letra adivinhada ou remova um chance do jogador
+      // unindo um elemnto em uma arrav
+      if(letters.includes(normalizedLetter)) {
+        setGuessedLatters((actualGuessedLetters) => [
+          ...actualGuessedLetters,
+          normalizedLetter,
+        ]);
+      }else {
+        setWrongLetters((actualWrongLetters) => [
+          ...actualWrongLetters,
+          normalizedLetter,
+        ]);
+      }
   }
+
+  //Debugger
+  console.log(guessedLetters)
+  console.log(wrongLetters)
 
   // reinicia o jogo  
   const retry = () => {
     setGameStage(stages[0].name)
   }
-
-  //Debugger
-  console.log(words);
+  
 
 
   return (
