@@ -2,7 +2,7 @@
 import './App.css'
 
 // React
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // data
 import {wordsList} from "./data/words"
@@ -17,6 +17,8 @@ const stages = [
   {id: 2, name: "game"},
   {id: 3, name: "end"},
 ];
+
+const guessesQty = 3
 
 function App() {
   //Controla o estágio do game com useState  
@@ -35,7 +37,7 @@ function App() {
   //controla as letras erradas
   const [wrongLetters, setWrongLetters] = useState([])
   //controla a quantidades de tentativas que o jogador vai ter
-  const [guesses, setGuesses] = useState(3)
+  const [guesses, setGuesses] = useState(guessesQty)
   //contrla a pontuação do jogador
   const [score, setScore] = useState(0)
 
@@ -122,15 +124,36 @@ function App() {
           ...actualWrongLetters,
           normalizedLetter,
         ]);
+
+        //condiçao para diminuir as chances do jogador
+        setGuesses((actualGuesses) => actualGuesses -1)
       }
   }
 
-  //Debugger
-  console.log(guessedLetters)
-  console.log(wrongLetters)
+  const clearLetterStates = () => {
+    setGuessedLatters([])
+    setWrongLetters([])
+  }
+
+  // monitora um dado com useEffect
+  useEffect(() => {
+
+    if(guesses <= 0){
+
+      // resetar todos os estados antes do gameover
+      clearLetterStates()
+
+      setGameStage(stages[2].name)
+
+    }
+
+  }, [guesses])
 
   // reinicia o jogo  
   const retry = () => {
+    setScore(0)
+    setGuesses(guessesQty)
+  
     setGameStage(stages[0].name)
   }
   
