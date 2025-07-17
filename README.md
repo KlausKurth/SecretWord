@@ -59,6 +59,6 @@ Este projeto foi desenvolvido com **React + JavaScript** como parte do meu apren
 
 ## ✍️ Autor
 
-Desenvolvido com 💙 por **[Klaus Christian Kurth](https://github.com/klausckurth)**  
+Desenvolvido com 💙 por **[Klaus Christian Kurth](https://github.com/KlausKurth)**  
 📧 klausckurth@gmail.com  
-🔗 [LinkedIn](https://www.linkedin.com/in/klauskurth/) 
+🔗 [LinkedIn](https://www.linkedin.com/in/klaus-christian-kurth-soares-039937164/) 
