@@ -33,7 +33,7 @@ function App() {
   const [letters, setLetters] = useState([]);
 
   //controla as letras adivinhadas
-  const [guessedLetters, setGuessedLatters] = useState([])
+  const [guessedLetters, setGuessedLetters] = useState([])
   //controla as letras erradas
   const [wrongLetters, setWrongLetters] = useState([])
   //controla a quantidades de tentativas que o jogador vai ter
@@ -43,7 +43,9 @@ function App() {
 
 
   // Pegar uma categoria e palavra aleatória
-  const pickWordAndCategory = () => {
+  //O useCallback é um hook do React que memoriza uma função, ou seja: Essa função só será recriada se alguma dependência no array [] mudar (nesse caso, nunca muda).
+  //E por que pickWordAndCategory também tem useCallback? Porque ele está sendo usado dentro de startGame, que também está dentro de um useEffect.
+  const pickWordAndCategory = useCallback(() => {
     
     // pega o array de categorias do arquivo words.js
     const categories = Object.keys(words)
@@ -54,24 +56,31 @@ function App() {
     // Math.random() * 6 // Suponha que dá 4.87
     // Math.floor(4.87)  // Vira 4
     // categories[4]     // Acessa a quinta categoria
-    const category = categories[Math.floor(Math.random() * Object.keys(categories).length)]
+    const category = categories[Math.floor(Math.random() * categories.length)];
 
     //Debugger
     //console.log(category)
     
     //pegar uma palavra aleatória
-    const word = words[category][Math.floor(Math.random() * Object.keys(categories).length)]
+    const word = words[category][Math.floor(Math.random() * words[category].length)];
 
     //Debugger
     //console.log(word)
 
     // Retornando o valor como objeto
+    //
     return {word, category}
-  }
+  }, [words])
 
   // Função que inicia o jogo
   // stage 1 segundo estágio game
-  const startGame = () => {
+  //O useCallback é um hook do React que memoriza uma função, ou seja: Essa função só será recriada se alguma dependência no array [] mudar (nesse caso, nunca muda).
+  // Se startGame não estivesse envolvida com useCallback, o React iria pensar que startGame muda a cada renderização, mesmo sem necessidade. 
+  // Isso faria o useEffect executar mais vezes do que deveria, ou mesmo emitir warnings de dependências instáveis.
+  const startGame = useCallback(() => {
+    // ao inicio do jogo reiniciar os estados
+    clearLetterStates()
+
     // desestrutura como objeto o valor word category que recebe da função pickWordCategory()
     const {word, category} = pickWordAndCategory();
 
@@ -94,7 +103,7 @@ function App() {
     setGameStage(stages[1].name)
 
 
-  }
+  }, [pickWordAndCategory])
 
   // processar a entrada da letra
   // stage 2 ultimo estágio game
@@ -115,7 +124,7 @@ function App() {
       // valide a letra adivinhada ou remova um chance do jogador
       // unindo um elemnto em uma arrav
       if(letters.includes(normalizedLetter)) {
-        setGuessedLatters((actualGuessedLetters) => [
+        setGuessedLetters((actualGuessedLetters) => [
           ...actualGuessedLetters,
           normalizedLetter,
         ]);
@@ -131,11 +140,15 @@ function App() {
   }
 
   const clearLetterStates = () => {
-    setGuessedLatters([])
+    setGuessedLetters([])
     setWrongLetters([])
   }
 
+  //o useEffect é um hook do React. Ele é uma função fornecida pelo React (a partir da versão 16.8) que permite você executar efeitos colaterais em componentes funcionais.
   // monitora um dado com useEffect
+  //Esse useEffect é o monitor do número de tentativas. Ele serve para:
+  //Esse array no final ([guesses]) indica que o useEffect só será executado quando o valor de guesses mudar.
+  //O useEffect não é uma condicional — ele sempre é executado quando as dependências mudam.
   useEffect(() => {
 
     if(guesses <= 0){
@@ -148,6 +161,21 @@ function App() {
     }
 
   }, [guesses])
+
+  // Verifica se ganhou
+  useEffect(() => {
+    const uniqueLetters = [...new Set(letters)];
+  
+    if (
+      gameStage === "game" && // <-- impede execução no início
+      guessedLetters.length > 0 && 
+      guessedLetters.length === uniqueLetters.length
+    ) {
+      setScore((actualScore) => actualScore + 100);
+      startGame();
+    }
+  }, [guessedLetters, letters, startGame, gameStage]);
+
 
   // reinicia o jogo  
   const retry = () => {
