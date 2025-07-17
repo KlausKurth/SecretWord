@@ -25,15 +25,11 @@ Este projeto foi desenvolvido com **React + JavaScript** como parte do meu apren
 
 ## 📸 Capturas de Tela
 
-Em breve prints da tela do jogo em execução:
+Prints da tela do jogo em execução:
 
-```md
 ![Tela inicial](./screenshots/tela-inicial.png)
 ![Palavra sendo descoberta](./screenshots/palavra-descoberta.png)
 ![Fim de jogo](./screenshots/game-over.png)
-
-
----
 
 ## 🚀 Tecnologias utilizadas
 
