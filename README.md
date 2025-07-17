@@ -28,9 +28,9 @@ Este projeto foi desenvolvido com **React + JavaScript** como parte do meu apren
 Em breve prints da tela do jogo em execução:
 
 ```md
-![Tela inicial](screenshots/tela-inicial.png)
-![Palavra sendo descoberta](screenshots/palavra-descoberta.png)
-![Fim de jogo](screenshots/game-over.png)
+![Tela inicial](./screenshots/tela-inicial.png)
+![Palavra sendo descoberta](./screenshots/palavra-descoberta.png)
+![Fim de jogo](./screenshots/game-over.png)
 
 
 ---
